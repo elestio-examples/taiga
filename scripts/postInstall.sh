@@ -3,4 +3,6 @@ set -o allexport; source .env; set +o allexport;
 
 #wait until the server is ready
 echo "Waiting for software to be ready ..."
-sleep 30s;
+sleep 180s;
+
+docker-compose exec -T taiga-back ./manage.py shell -c "from taiga.users.models import User; User.objects.create_superuser('admin', '"${ADMIN_EMAIL}"', '"${ADMIN_PASSWORD}"')"
