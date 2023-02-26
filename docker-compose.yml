@@ -88,7 +88,7 @@ services:
     image: taigaio/taiga-front:latest
     environment:
       TAIGA_URL: ${BASE_URL}
-      TAIGA_WEBSOCKETS_URL: "ws://${DOMAIN}"
+      TAIGA_WEBSOCKETS_URL: "wss://${DOMAIN}"
       TAIGA_SUBPATH: "" # "" or "/subpath"
       PUBLIC_REGISTER_ENABLED: "true"
     networks:
