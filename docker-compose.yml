@@ -46,11 +46,15 @@ services:
       POSTGRES_PASSWORD: ${APP_PASSWORD}
     volumes:
       - ./taiga-db-data:/var/lib/postgresql/data
+    networks:
+      - taiga
 
   taiga-back:
     image: taigaio/taiga-back:latest
     environment: *default-back-environment
     volumes: *default-back-volumes
+    networks:
+      - taiga
     depends_on:
       - taiga-db
       - taiga-events-rabbitmq
@@ -61,6 +65,8 @@ services:
     entrypoint: ["/taiga-back/docker/async_entrypoint.sh"]
     environment: *default-back-environment
     volumes: *default-back-volumes
+    networks:
+      - taiga
     depends_on:
       - taiga-db
       - taiga-back
@@ -75,6 +81,8 @@ services:
       RABBITMQ_DEFAULT_VHOST: taiga
     volumes:
       - ./taiga-async-rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - taiga
 
   taiga-front:
     image: taigaio/taiga-front:latest
@@ -83,6 +91,8 @@ services:
       TAIGA_WEBSOCKETS_URL: "ws://${DOMAIN}"
       TAIGA_SUBPATH: "" # "" or "/subpath"
       PUBLIC_REGISTER_ENABLED: "true"
+    networks:
+      - taiga
     # volumes:
     #   - ./conf.json:/usr/share/nginx/html/conf.json
 
@@ -92,6 +102,8 @@ services:
       RABBITMQ_USER: taiga
       RABBITMQ_PASS: ${APP_PASSWORD}
       TAIGA_SECRET_KEY: ${APP_PASSWORD}
+    networks:
+      - taiga
     depends_on:
       - taiga-events-rabbitmq
 
@@ -104,12 +116,16 @@ services:
       RABBITMQ_DEFAULT_VHOST: taiga
     volumes:
       - ./taiga-events-rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - taiga
 
   taiga-protected:
     image: taigaio/taiga-protected:latest
     environment:
       MAX_AGE: 360
       SECRET_KEY: "taiga-back-secret-key"
+    networks:
+      - taiga
 
   taiga-gateway:
     image: nginx:1.19-alpine
@@ -119,7 +135,13 @@ services:
       - ./taiga-gateway/taiga.conf:/etc/nginx/conf.d/default.conf
       - ./taiga-static-data:/taiga/static
       - ./taiga-media-data:/taiga/media
+    networks:
+      - taiga
     depends_on:
       - taiga-front
       - taiga-back
       - taiga-events
+
+
+networks:
+  taiga:
