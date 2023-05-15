@@ -123,7 +123,7 @@ services:
     image: taigaio/taiga-protected:${SOFTWARE_VERSION_TAG}
     environment:
       MAX_AGE: 360
-      SECRET_KEY: "taiga-back-secret-key"
+      SECRET_KEY: ${APP_PASSWORD}
     networks:
       - taiga
 
