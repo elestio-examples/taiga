@@ -40,6 +40,7 @@ x-volumes:
 services:
   taiga-db:
     image: postgres:12.3
+    restart: always
     environment:
       POSTGRES_DB: taiga
       POSTGRES_USER: taiga
@@ -51,6 +52,7 @@ services:
 
   taiga-back:
     image: taigaio/taiga-back:${SOFTWARE_VERSION_TAG}
+    restart: always
     environment: *default-back-environment
     volumes: *default-back-volumes
     networks:
@@ -62,6 +64,7 @@ services:
 
   taiga-async:
     image: taigaio/taiga-back:${SOFTWARE_VERSION_TAG}
+    restart: always
     entrypoint: ["/taiga-back/docker/async_entrypoint.sh"]
     environment: *default-back-environment
     volumes: *default-back-volumes
@@ -74,6 +77,7 @@ services:
 
   taiga-async-rabbitmq:
     image: rabbitmq:3.8-management-alpine
+    restart: always
     environment:
       RABBITMQ_ERLANG_COOKIE: secret-erlang-cookie
       RABBITMQ_DEFAULT_USER: taiga
@@ -86,6 +90,7 @@ services:
 
   taiga-front:
     image: taigaio/taiga-front:${SOFTWARE_VERSION_TAG}
+    restart: always
     environment:
       TAIGA_URL: ${BASE_URL}
       TAIGA_WEBSOCKETS_URL: "wss://${DOMAIN}"
@@ -98,6 +103,7 @@ services:
 
   taiga-events:
     image: taigaio/taiga-events:${SOFTWARE_VERSION_TAG}
+    restart: always
     environment:
       RABBITMQ_USER: taiga
       RABBITMQ_PASS: ${APP_PASSWORD}
@@ -109,6 +115,7 @@ services:
 
   taiga-events-rabbitmq:
     image: rabbitmq:3.8-management-alpine
+    restart: always
     environment:
       RABBITMQ_ERLANG_COOKIE: secret-erlang-cookie
       RABBITMQ_DEFAULT_USER: taiga
@@ -121,6 +128,7 @@ services:
 
   taiga-protected:
     image: taigaio/taiga-protected:${SOFTWARE_VERSION_TAG}
+    restart: always
     environment:
       MAX_AGE: 360
       SECRET_KEY: ${APP_PASSWORD}
@@ -129,6 +137,7 @@ services:
 
   taiga-gateway:
     image: nginx:1.19-alpine
+    restart: always
     ports:
       - "172.17.0.1:9000:80"
     volumes:
