@@ -1,8 +1,6 @@
 version: "3.5"
 
-x-environment:
-  &default-back-environment
-  # Database settings
+x-environment: &default-back-environment # Database settings
   POSTGRES_DB: taiga
   POSTGRES_USER: taiga
   POSTGRES_PASSWORD: ${APP_PASSWORD}
@@ -30,16 +28,14 @@ x-environment:
   ENABLE_TELEMETRY: "True"
   TAIGA_TELEMETRY_REFERER: "elest.io"
 
-x-volumes:
-  &default-back-volumes
+x-volumes: &default-back-volumes
   - ./taiga-static-data:/taiga-back/static
   - ./taiga-media-data:/taiga-back/media
   # - ./config.py:/taiga-back/settings/config.py
 
-
 services:
   taiga-db:
-    image: postgres:12.3
+    image: elestio/postgres:15
     restart: always
     environment:
       POSTGRES_DB: taiga
@@ -47,11 +43,13 @@ services:
       POSTGRES_PASSWORD: ${APP_PASSWORD}
     volumes:
       - ./taiga-db-data:/var/lib/postgresql/data
+    ports:
+      - 172.17.0.1:3404:5432
     networks:
       - taiga
 
   taiga-back:
-    image: taigaio/taiga-back:${SOFTWARE_VERSION_TAG}
+    image: elestio/taiga-backend:${SOFTWARE_VERSION_TAG}
     restart: always
     environment: *default-back-environment
     volumes: *default-back-volumes
@@ -63,7 +61,7 @@ services:
       - taiga-async-rabbitmq
 
   taiga-async:
-    image: taigaio/taiga-back:${SOFTWARE_VERSION_TAG}
+    image: elestio/taiga-backend:${SOFTWARE_VERSION_TAG}
     restart: always
     entrypoint: ["/taiga-back/docker/async_entrypoint.sh"]
     environment: *default-back-environment
@@ -89,7 +87,7 @@ services:
       - taiga
 
   taiga-front:
-    image: taigaio/taiga-front:${SOFTWARE_VERSION_TAG}
+    image: elestio/taiga-frontend:${SOFTWARE_VERSION_TAG}
     restart: always
     environment:
       TAIGA_URL: ${BASE_URL}
@@ -102,7 +100,7 @@ services:
     #   - ./conf.json:/usr/share/nginx/html/conf.json
 
   taiga-events:
-    image: taigaio/taiga-events:${SOFTWARE_VERSION_TAG}
+    image: elestio/taiga-event:${SOFTWARE_VERSION_TAG}
     restart: always
     environment:
       RABBITMQ_USER: taiga
@@ -127,7 +125,7 @@ services:
       - taiga
 
   taiga-protected:
-    image: taigaio/taiga-protected:${SOFTWARE_VERSION_TAG}
+    image: elestio/taiga-protected:${SOFTWARE_VERSION_TAG}
     restart: always
     environment:
       MAX_AGE: 360
@@ -151,6 +149,17 @@ services:
       - taiga-back
       - taiga-events
 
+  pgadmin:
+    image: elestio/pgadmin:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${ADMIN_PASSWORD}
+      PGADMIN_LISTEN_PORT: 8080
+    ports:
+      - "172.17.0.1:6170:8080"
+    volumes:
+      - ./servers.json:/pgadmin/servers.json
 
 networks:
   taiga:

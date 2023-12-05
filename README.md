@@ -21,3 +21,9 @@ You can open Taiga Super Admin UI here:
     URL: https://[CI_CD_DOMAIN]/admin
     user: admin
     password: [ADMIN_PASSWORD]
+
+You can open the pgAdmin web UI here:
+
+    URL: https://[CI_CD_DOMAIN]:38118
+    email: [ADMIN_EMAIL]
+    password: [ADMIN_PASSWORD]

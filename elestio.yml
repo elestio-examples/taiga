@@ -7,6 +7,20 @@ ports:
     public: true
     path: "/"
     isAuth: false
+  - protocol: "HTTPS"
+    targetProtocol: "HTTP"
+    listeningPort: "38118"
+    targetPort: "6170"
+    targetIP: "172.17.0.1"
+    public: true
+    path: "/"
+    isAuth: false
+  - protocol: "TCP"
+    targetProtocol: "TCP"
+    listeningPort: "41748"
+    targetIP: "172.17.0.1"
+    targetPort: "3404"
+    public: true
 environments:
   - key: "SOFTWARE_VERSION_TAG"
     value: "latest"
@@ -50,8 +64,12 @@ webUI:
   - url: "https://[CI_CD_DOMAIN]"
     label: "Taiga Admin"
     login: "[ADMIN_EMAIL]"
-    password: "[APP_PASSWORD]"
+    password: "[ADMIN_PASSWORD]"
   - url: "https://[CI_CD_DOMAIN]/admin"
     label: "Taiga Super Admin"
     login: "admin"
-    password: "[ADMIN_PASSWORD]"    
+    password: "[ADMIN_PASSWORD]"
+  - url: "https://[CI_CD_DOMAIN]:38118"
+    label: "PgAdmin"
+    login: "[ADMIN_EMAIL]"
+    password: "[ADMIN_PASSWORD]"
