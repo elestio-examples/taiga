@@ -159,7 +159,7 @@ services:
     ports:
       - "172.17.0.1:6170:8080"
     volumes:
-      - ./servers.json:/pgadmin/servers.json
+      - ./servers.json:/pgadmin4/servers.json
 
 networks:
   taiga:
