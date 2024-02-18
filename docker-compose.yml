@@ -75,6 +75,7 @@ services:
 
   taiga-async-rabbitmq:
     image: rabbitmq:3.8-management-alpine
+    hostname: rabbit_node_1
     restart: always
     environment:
       RABBITMQ_ERLANG_COOKIE: secret-erlang-cookie
