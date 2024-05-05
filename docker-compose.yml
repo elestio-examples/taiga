@@ -76,6 +76,7 @@ services:
   taiga-async-rabbitmq:
     image: rabbitmq:3.8-management-alpine
     restart: always
+    hostname: "taiga-async-rabbitmq"
     environment:
       RABBITMQ_ERLANG_COOKIE: secret-erlang-cookie
       RABBITMQ_DEFAULT_USER: taiga
@@ -114,6 +115,7 @@ services:
   taiga-events-rabbitmq:
     image: rabbitmq:3.8-management-alpine
     restart: always
+    hostname: "taiga-events-rabbitmq"
     environment:
       RABBITMQ_ERLANG_COOKIE: secret-erlang-cookie
       RABBITMQ_DEFAULT_USER: taiga
